@@ -1,56 +1,9 @@
-## What you get
+## Sample Financing application
 
 The application in this repository: 
 * creates an H2 database in the root directory of the project;
 * sets up the database structure according to the entities;
 * seeds some initial data, runs the financing algorithm and prints out the report.
-
-## What you need to do
-
-You need to implement the financing algorithm according to the specification. The algorithm has to
-calculate the results of the financing and persist them. One invocation of the algorithm represents
-one financing round. The invoices financed in a financing round are considered to be "financed" and 
-may not be financed in the subsequent financing rounds. 
-
-To store the results of the financing, you will have to adjust the data structure. You are free to create 
-new entities and adjust the existing ones.
-
-Your entry points are `FinancingService` and `ReportingService` classes. Naturally, you may create additional
-classes, if needed. You can also add new relations, new entities or fields to existing ones. You may also 
-use any third-party dependencies you need. 
-
-If you don't like something in the provided code, you are free to change it. You're also free to adjust the
-seeding data if you wish to make it more representative.
-
-## Financing algorithm specification
-
-The terminology used here is described in more detail in the Glossary section.
-
-The financing algorithm should be applied separately to each invoice in the database which was not financed 
-in the previous rounds.
-
-For each non-financed `Invoice`:
-* select the single financing `Purchaser`;
-* calculate the `Purchaser`'s interest and the `Creditor`'s payment for this invoice;
-* persist the financing data.
-
-A `Purchaser` is eligible for financing of the `Invoice`, if:
-* the `Purchaser` has set up the settings for the invoice's `Creditor` (has a `PurchaserFinancingSettings` 
-  defined for this `Creditor`);
-* the financing term of the invoice (duration between the current date and the maturity date of the invoice) 
-  is greater or equal to the value `Purchaser.minimumFinancingTermInDays` for this `Purchaser`;
-* the `Purchaser`'s financing rate for the invoice doesn't exceed the `Creditor.maxFinancingRateInBps` value 
-  for the invoice's `Creditor`. 
-
-Of all purchasers eligible for financing, select the one with the lowest financing rate. This will be the 
-`Purchaser` that finances the invoice.
-
-### Reporting specification
-
-Reporting should contain a record for each unique Purchaser/Creditor pair that participated in the latest
-financing: if the Purchaser financed any invoices of this Creditor in this financing round, there should
-be one record for this Purchaser/Creditor. If the Purchaser didn't finance any invoices of this Creditor,
-there should be no records for this Purchaser/Creditor.
 
 ### Example
 
@@ -76,20 +29,6 @@ The reporting should then produce something like:
 ```
 Purchaser2  Creditor1   9 996,67 EUR    3,33 EUR
 ```
-
-## What we'd like to see
-
-* implementation of the financing algorithm;
-* persisting of the financing results;  
-* implementation of the reporting;
-* tests verifying that your solution is correct;
-* any documentation you think is necessary for your solution.
-
-## If this was too easy
-
-* when calculating the term of the financing, consider only working days;
-* implement Debtor blacklisting: if a Purchaser has added a Debtor to a blacklist,
-  then this Purchaser is not eligible for financing of this Debtor's invoices.
 
 ## Glossary
 
